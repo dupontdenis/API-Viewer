@@ -15,7 +15,10 @@ const API = {
   async fetchAPI(endpoint, options = {}) {
     const url = `${this.baseUrl.replace(/\/$/, "")}${endpoint}`;
     const config = {
-      headers: { "Content-Type": "application/json" },
+      method: "GET",
+      headers: {
+        Accept: "application/json",
+      },
       ...options,
     };
 
