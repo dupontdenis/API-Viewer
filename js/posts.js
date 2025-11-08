@@ -33,7 +33,12 @@ const Posts = {
       UI.setStatus(UI.els.postsCount, `${count} ${resourceName}`);
     } catch (e) {
       this.renderPosts([]);
-      UI.setStatus(UI.els.postsCount, `Error: ${e.message}`);
+      let msg = `Error: ${e.message}`;
+      if (msg.includes("Failed to fetch")) {
+        msg +=
+          '<br><span style="color:#c00">Change the API base URL to <br><b>https://corsproxy.io/?https://ghibliapi.dev/people</b></span>';
+      }
+      UI.els.postsCount.innerHTML = msg;
     } finally {
       UI.setBusy(UI.els.refreshPosts, false);
     }
