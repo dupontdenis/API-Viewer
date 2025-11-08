@@ -49,3 +49,21 @@ Then visit http://localhost:8080.
 
 - The UI is read-only and does not support creating, updating, or deleting posts.
 - The UI expects post objects to have at least `id` and `title` fields. Adjust if your schema differs.
+
+## CORS and Public APIs
+
+If you use a public API (like [Ghibli API](https://ghibliapi.dev/people)) as your base URL, you may see a "Failed to fetch" error. This is because most public APIs block requests from browser-based apps hosted on other domains (like GitHub Pages) for security reasons. This restriction is called **CORS** (Cross-Origin Resource Sharing).
+
+**How to fix:**
+
+To work around this, you can use a CORS proxy service. For example, instead of using:
+
+    https://ghibliapi.dev/people
+
+set your API Base URL to:
+
+    https://corsproxy.io/?https://ghibliapi.dev/people
+
+This proxy forwards your request and adds the necessary CORS headers, allowing your app to fetch data from the public API.
+
+**Note:** CORS proxies are for development/testing only. For production, use your own backend or an API that supports CORS.
