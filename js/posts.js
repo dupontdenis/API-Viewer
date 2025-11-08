@@ -42,20 +42,46 @@ const Posts = {
   renderPosts(list) {
     if (!Array.isArray(list) || list.length === 0) {
       UI.els.postsList.innerHTML =
-        '<div class="muted" style="padding:0.75rem">No posts.</div>';
+        '<div class="muted" style="padding:0.75rem">No items to display.</div>';
       return;
     }
 
+    // Extract keys from first item to build dynamic headers
+    const keys = Object.keys(list[0]);
+
+    // Find the ID field (could be 'id', '_id', 'ID', etc.)
+    const idKey =
+      keys.find((k) => k.toLowerCase() === "id" || k === "_id") || keys[0];
+
+    // Generate table headers dynamically
+    const headers = keys
+      .map((key) => `<th>${UI.escapeHtml(key)}</th>`)
+      .join("");
+
+    // Generate table rows dynamically
     const rows = list
-      .map((p) => {
-        const postId = p.id || p._id || p.ID || "";
+      .map((item) => {
+        const itemId = item[idKey] || "";
+        const cells = keys
+          .map((key) => {
+            const value = item[key];
+            // Format value based on type
+            let displayValue;
+            if (typeof value === "object" && value !== null) {
+              displayValue = JSON.stringify(value);
+            } else {
+              displayValue = value ?? "";
+            }
+            return `<td>${UI.escapeHtml(displayValue)}</td>`;
+          })
+          .join("");
+
         return `
       <tr>
-        <td><span class="badge">${UI.escapeHtml(postId)}</span></td>
-        <td>${UI.escapeHtml(p.title || "")}</td>
+        ${cells}
         <td class="actions">
           <button data-action="view" data-id="${UI.escapeAttr(
-            postId
+            itemId
           )}" class="secondary">View</button>
         </td>
       </tr>
@@ -67,8 +93,7 @@ const Posts = {
       <table>
         <thead>
           <tr>
-            <th style="width:72px">ID</th>
-            <th style="width:50%">Title</th>
+            ${headers}
             <th style="width:180px">Actions</th>
           </tr>
         </thead>
