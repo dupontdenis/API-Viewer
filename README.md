@@ -1,4 +1,4 @@
-# Posts API UI (Read-Only)
+# API UI (Read-Only)
 
 A minimal, dependency-free web UI to view posts from a REST API.
 
